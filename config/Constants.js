@@ -252,7 +252,7 @@ const admin = [
 const inviteRevenue = 1000; // 1000 BLEGGS
 const dailyRevenue = 1000; // 1000 BLEGGS
 // const BOT_TOKEN = '7510686102:AAGUu58pUBz5-2I6fQhwSktEXkxUzVZouqs';//test bot
-const BOT_TOKEN = '5859581801:AAE9IA-R3EbNsiI1YMkYQeSPZAiahHM1q4o';
+const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';
 const BOT_DESCRIPTION = `
 Welcome to BLEGGS Miner 🔥
 
