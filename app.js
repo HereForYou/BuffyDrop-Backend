@@ -7,7 +7,8 @@ var express = require("./config/express"),
 const { init } = require("./config/socket");
 
 const Setting = require("./models/setting.model");
-var { taskList, dailyTimeLimitList, powerList, levelStandard, admin, inviteRevenue, dailyRevenue, dexList, BOT_TOKEN, BOT_DESCRIPTION, WEB_APP_URL, WEB_SITE_URL, BOT_CERTIFICATION } = require("./config/Constants");
+var { taskList, dailyTimeLimitList, powerList, levelStandard, admin, inviteRevenue, dailyRevenue,
+    dexList, BOT_TOKEN, BOT_DESCRIPTION, WEB_APP_URL, WEB_SITE_URL, BOT_CERTIFICATION } = require("./config/Constants");
 
 const { Telegraf, Markup } = require("telegraf");
 const bot = new Telegraf(BOT_TOKEN);
