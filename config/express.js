@@ -5,7 +5,6 @@ var express = require("express"),
     routers = require("./routers");
 
 module.exports = () => {
-
     var app = express();
     app.use(express.json());
     app.use(express.urlencoded({
