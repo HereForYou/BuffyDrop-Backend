@@ -34,6 +34,10 @@ mongoose().then(async () => {
         });
     });
 
+    app.get('/', (req, res) => {
+        res.send('Hello World!');
+    });
+
     server.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}`)
     });
@@ -63,6 +67,7 @@ async function SettingInitialize() {
         console.error('Error ensuring default Setting:', error);
     }
 }
+
 
 
 bot.command("start", (ctx) => {

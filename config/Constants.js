@@ -186,37 +186,37 @@ const taskList = [
     {
         id: "telegram",
         title: "Join our TG channel",
-        image: "telegram.svg",
+        image: "tg_icon.png",
         profit: 1000,
-        link: "https://t.me/Buffy"
-    },
-    {
-        id: "youtube",
-        title: "Get Exclusive listing info",
-        image: "youtube.svg",
-        profit: 1000,
-        link: "https://www.youtube.com/@BuffyToken"
-    },
-    {
-        id: "tiktok",
-        title: "Get Exclusive listing info",
-        image: "youtube.svg",
-        profit: 1000,
-        link: "https://www.tiktok.com/@Buffytoken"
+        link: "https://t.me/BuffyDrops"
     },
     {
         id: "twitter",
         title: "Follow your X account",
-        image: "twitter.svg",
+        image: "twitter_icon.png",
         profit: 1000,
-        link: "https://x.com/BuffyToken"
+        link: "https://twitter.com/BuffyDrops"
     },
     {
         id: "instagram",
-        title: "Choose",
-        image: "choose.svg",
+        title: "Follow us on Instagram",
+        image: "instagram_icon.png",
         profit: 1000,
-        link: "https://www.instagram.com/Buffytoken/"
+        link: "https://www.instagram.com/BuffyDrops/"
+    },
+    {
+        id: "youtube",
+        title: "Follow us on Instagram",
+        image: "youtube_icon.png",
+        profit: 1000,
+        link: "https://www.youtube.com/c/BuffyDrops"
+    },
+    {
+        id: "tiktok",
+        title: "Join out TT channel",
+        image: "tt_icon.png",
+        profit: 1000,
+        link: "https://www.tiktok.com/@BuffyDrops"
     },
 ];
 
@@ -249,7 +249,7 @@ const admin = [
     }
 ];
 
-const inviteRevenue = 1000; // 1000 Buffy
+const inviteRevenue = 0.1001; // 1000 Buffy
 const dailyRevenue = 1000; // 1000 Buffy
 // const BOT_TOKEN = '7510686102:AAGUu58pUBz5-2I6fQhwSktEXkxUzVZouqs';//test bot
 const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';

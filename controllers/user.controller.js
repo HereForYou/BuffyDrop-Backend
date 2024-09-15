@@ -42,31 +42,29 @@ exports.getUser = catchAsync(async (req, res) => {
             const power = setting.powerList[0];
             const inviteRevenue = setting.inviteRevenue;
             const countDown = dailyTimeLimit.value * 60;
-            if (start_param) {
+            const rank = await User.find();
+            const totalPoints = rank.length + 1;
+
+            if (start_param)
+            ///invited user
+            {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints })
                         .then(async (user) => {
-                            //socket emit
-                            const totalCount = await User.countDocuments({});
-                            // const emitNewUserEvent = async () => {
-                            //     const io = getIo();
-                            //     io.emit('newUserRegistered', { totalCount });
-                            // };
-                            // await emitNewUserEvent();
-
                             if (!owner.friends.includes(tgId)) {
+                                console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
                                 owner.friends.push(tgId);
-                                owner.totalPoints += inviteRevenue;
+                                owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
-                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} has joined your Bleggs crypto Mine! 🌱🚀Get ready for more fun together! 👥💪`, {
+                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} has joined your Buffy! 🌱🚀Get ready for more fun together! 👥💪`, {
                                     reply_markup: JSON.stringify({
                                         inline_keyboard: [
                                             [
                                                 {
                                                     text: 'Claim Now',
                                                     web_app: {
-                                                        url: "https://app.bleggs.com"
+                                                        url: "https://dog82027.vercel.app"
                                                     }
                                                 }
                                             ]
@@ -84,15 +82,26 @@ exports.getUser = catchAsync(async (req, res) => {
                     return res.status(400).send("Unauthorized Invitation Link!");
                 }
             }
+            //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power, totalPoints })
                     .then(async (user) => {
-                        const totalCount = await User.countDocuments({});
-                        // const emitNewUserEvent = async () => {
-                        //     const io = getIo();
-                        //     io.emit('newUserRegistered', { totalCount });
-                        // };
-                        // await emitNewUserEvent();
+                        // const totalCount = await User.countDocuments({});
+                        // const totalCount = await User.countDocuments({});
+                        let reward;
+                        if (totalPoints < 11) {
+                            reward = 0.1001;
+                        }
+                        else if (totalPoints < 101) { reward = 0.1; }
+                        else if (totalPoints < 1001) { reward = 0.096; }
+                        else if (totalPoints < 10001) { reward = 0.0949; }
+                        else if (totalPoints < 100001) { reward = 0.065; }
+                        else if (totalPoints < 1000001) { reward = 0.0190; }
+                        else { reward = totalPoints * 0.01; }
+                        console.log('invite reward amount-------------', reward)
+                        let settingDoc = await Setting.findOne();
+                        settingDoc.inviteRevenue = reward;
+                        await settingDoc.save();
                         return res.status(200).send({ user });
                     })
                     .catch((err) => {
