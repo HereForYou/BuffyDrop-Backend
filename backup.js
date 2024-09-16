@@ -49,6 +49,10 @@ var UserSchema = new Schema(
             type: Boolean,
             default: false
         },
+        joinRank: {
+            type: Number,
+            default: 0
+        },
         friends: [{
             type: String,
             required: true
@@ -139,6 +143,7 @@ async function insertUsers(data) {
             level: userData.level,
             power: userData.power,
             dailyTimeLimit: userData.dailyTimeLimit,
+            joinRank: userData.joinRank,
             createdAt: userData.createdAt,
             updatedAt: userData.updatedAt,
         });

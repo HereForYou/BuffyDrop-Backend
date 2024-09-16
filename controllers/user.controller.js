@@ -49,7 +49,7 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
                                 // console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
