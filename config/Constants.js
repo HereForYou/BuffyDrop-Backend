@@ -186,37 +186,37 @@ const taskList = [
     {
         id: "telegram",
         title: "Join our TG channel",
-        image: "telegram.svg",
+        image: "tg_icon.png",
         profit: 1000,
-        link: "https://t.me/bleggs"
-    },
-    {
-        id: "youtube",
-        title: "Get Exclusive listing info",
-        image: "youtube.svg",
-        profit: 1000,
-        link: "https://www.youtube.com/@BleggsToken"
-    },
-    {
-        id: "tiktok",
-        title: "Get Exclusive listing info",
-        image: "youtube.svg",
-        profit: 1000,
-        link: "https://www.tiktok.com/@bleggstoken"
+        link: "https://t.me/BuffyDrops"
     },
     {
         id: "twitter",
         title: "Follow your X account",
-        image: "twitter.svg",
+        image: "twitter_icon.png",
         profit: 1000,
-        link: "https://x.com/BLEGGSToken"
+        link: "https://twitter.com/BuffyDrops"
     },
     {
         id: "instagram",
-        title: "Choose",
-        image: "choose.svg",
+        title: "Follow us on Instagram",
+        image: "instagram_icon.png",
         profit: 1000,
-        link: "https://www.instagram.com/bleggstoken/"
+        link: "https://www.instagram.com/BuffyDrops/"
+    },
+    {
+        id: "youtube",
+        title: "Follow our YouTube Channel",
+        image: "youtube_icon.png",
+        profit: 1000,
+        link: "https://www.youtube.com/c/BuffyDrops"
+    },
+    {
+        id: "tiktok",
+        title: "Join out TT channel",
+        image: "tt_icon.png",
+        profit: 1000,
+        link: "https://www.tiktok.com/@BuffyDrops"
     },
 ];
 
@@ -249,29 +249,18 @@ const admin = [
     }
 ];
 
-const inviteRevenue = 1000; // 1000 BLEGGS
-const dailyRevenue = 1000; // 1000 BLEGGS
+const inviteRevenue = 0.1001; // 1000 Buffy
+const dailyRevenue = 1000; // 1000 Buffy
 // const BOT_TOKEN = '7510686102:AAGUu58pUBz5-2I6fQhwSktEXkxUzVZouqs';//test bot
 const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';
 const BOT_DESCRIPTION = `
-Welcome to BLEGGS Miner 🔥
-
-Our Telegram Miner is now live, and you're among the first to experience it in beta! 
-Start MINING today and unlock incredible rewards as you grow your crypto stack faster.
-
-How It Works:
-
-🟢 Click "Start Mining" to begin with 2 MH power for 30 minutes.
-🟢  Upgrade your power and duration as you earn more BLEGGS.
-🟢 Complete daily tasks and invite friends to boost your earnings!
-
-How to use guide follow the link below: 
-https://ecosystem.bleggs.com/bleggs-whitepaper/about-products/bleggs-miner/how-to-start-mining
+How early did you join Buffy?  🍖
+Discover your rank and unlock your reward!
 `;
 const BOT_CERTIFICATION = '';
-// const WEB_APP_URL = 'https://bleggs-miniapp.vercel.app'//test
-const WEB_APP_URL = 'https://app.bleggs.com';//
-const WEB_SITE_URL = 'https://bleggs.com';
-
+// const WEB_APP_URL = 'https://Buffy-miniapp.vercel.app'//test
+// const WEB_APP_URL = 'https://app.Buffy.com';//
+const WEB_SITE_URL = 'https://Buffy.com';
+const WEB_APP_URL = 'https://dog82027.vercel.app'
 
 module.exports = { dailyTimeLimitList, powerList, levelStandard, taskList, admin, inviteRevenue, dailyRevenue, dexList, BOT_TOKEN, BOT_DESCRIPTION, BOT_CERTIFICATION, WEB_SITE_URL, WEB_APP_URL };

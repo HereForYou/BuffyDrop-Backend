@@ -92,7 +92,7 @@ var SettingSchema = new Schema(
         ],
         inviteRevenue: {
             type: Number,
-            default: 10 // Min
+            default: 0.1001 // Min
         },
         dailyRevenue: {
             type: Number,

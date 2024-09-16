@@ -34,12 +34,17 @@ mongoose().then(async () => {
         });
     });
 
+    app.get('/', (req, res) => {
+        res.send('Hello World!');
+    });
+
     server.listen(config.port, () => {
         console.log(`Server is running at http://localhost:${config.port}`)
     });
 });
 
 async function SettingInitialize() {
+
     try {
         const existingSetting = await Setting.findOne({});
         if (!existingSetting) {
@@ -63,20 +68,29 @@ async function SettingInitialize() {
     }
 }
 
+
+
 bot.command("start", (ctx) => {
-    return ctx.reply(
-        `${desText}\n${cert}`,
-        Markup.inlineKeyboard([
-            Markup.button.webApp(
-                `💻Launch Bleggs`,
-                WEB_APP_URL
-            ),
-            Markup.button.url(
-                `🌐Website`,
-                WEB_SITE_URL
-            ),
-        ])
+    // First, send the image
+    ctx.replyWithPhoto(
+        { source: 'img/pic.png' }, // Replace with your image URL or use a file path
+        {
+            caption: `${desText}\n${cert}`, // This will be the caption under the image
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            text: `Let's Go`,
+                            web_app: { url: WEB_APP_URL }
+                        },
+                        {
+                            text: 'Join Buffy Community',
+                            url: WEB_SITE_URL
+                        }
+                    ]
+                ]
+            }
+        }
     );
 });
-
-// bot.launch();
+bot.launch();

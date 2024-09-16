@@ -8,7 +8,6 @@ const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var { BOT_TOKEN } = require("../config/Constants");
-
 var cron = require('node-cron');
 
 const bot = new Telegraf(BOT_TOKEN);
@@ -34,7 +33,7 @@ exports.getUser = catchAsync(async (req, res) => {
     try {
         const user = await User.findOne({ tgId: tgId })
         if (user) {
-            return res.status(200).send({ user });
+            return res.status(200).send({ user, signIn: true });
         } else {
             let inviteLink = uuidv4();
             const setting = await Setting.findOne();
@@ -42,31 +41,29 @@ exports.getUser = catchAsync(async (req, res) => {
             const power = setting.powerList[0];
             const inviteRevenue = setting.inviteRevenue;
             const countDown = dailyTimeLimit.value * 60;
-            if (start_param) {
+            const rank = await User.find();
+            const totalPoints = rank.length + 1;
+            const joinRank = totalPoints
+            if (start_param)
+            ///invited user
+            {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints })
                         .then(async (user) => {
-                            //socket emit
-                            const totalCount = await User.countDocuments({});
-                            // const emitNewUserEvent = async () => {
-                            //     const io = getIo();
-                            //     io.emit('newUserRegistered', { totalCount });
-                            // };
-                            // await emitNewUserEvent();
-
                             if (!owner.friends.includes(tgId)) {
+                                // console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
                                 owner.friends.push(tgId);
-                                owner.totalPoints += inviteRevenue;
+                                owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
-                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} has joined your Bleggs crypto Mine! 🌱🚀Get ready for more fun together! 👥💪`, {
+                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} Join me because there’s a reason for spreading the BUFFY buzz. It’s now or never for the BUFFY drop!🍖`, {
                                     reply_markup: JSON.stringify({
                                         inline_keyboard: [
                                             [
                                                 {
                                                     text: 'Claim Now',
                                                     web_app: {
-                                                        url: "https://app.bleggs.com"
+                                                        url: "https://dog82027.vercel.app"
                                                     }
                                                 }
                                             ]
@@ -74,7 +71,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                     })
                                 });
                             }
-                            return res.status(200).send({ user });
+                            return res.status(200).send({ user, signIn: false });
                         })
                         .catch((err) => {
                             handleError(err, res);
@@ -84,16 +81,25 @@ exports.getUser = catchAsync(async (req, res) => {
                     return res.status(400).send("Unauthorized Invitation Link!");
                 }
             }
+            //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power, totalPoints, joinRank })
                     .then(async (user) => {
-                        const totalCount = await User.countDocuments({});
-                        // const emitNewUserEvent = async () => {
-                        //     const io = getIo();
-                        //     io.emit('newUserRegistered', { totalCount });
-                        // };
-                        // await emitNewUserEvent();
-                        return res.status(200).send({ user });
+                        let reward;
+                        if (totalPoints < 11) {
+                            reward = 0.1001;
+                        }
+                        else if (totalPoints < 101) { reward = 0.1; }
+                        else if (totalPoints < 1001) { reward = 0.096; }
+                        else if (totalPoints < 10001) { reward = 0.0949; }
+                        else if (totalPoints < 100001) { reward = 0.065; }
+                        else if (totalPoints < 1000001) { reward = 0.0190; }
+                        else { reward = totalPoints * 0.01; }
+                        // console.log('invite reward amount-------------', reward, totalPoints)
+                        let settingDoc = await Setting.findOne();
+                        settingDoc.inviteRevenue = reward;
+                        await settingDoc.save();
+                        return res.status(200).send({ user, signIn: false });
                     })
                     .catch((err) => {
                         handleError(err, res);
@@ -253,16 +259,19 @@ exports.getAllUsers = catchAsync(async (req, res) => {
 
 exports.getTopUsers = catchAsync(async (req, res) => {
     let tgId = req.params.id;
+    console.log("tgId---------------------", tgId);
+
     let numUsers = parseInt(req.query.num);
     try {
         const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1 }).sort({ totalPoints: -1 }).limit(numUsers);
         let curUser = await User.findOne({ tgId });
         let curUserIndex = await User.countDocuments({ totalPoints: { $gt: curUser.totalPoints } });
+        // console.log("topUser", topUsers, "----------------", "curUser", curUser);
 
         return res.status(200).json({
             topUsers: topUsers,
             curUser: curUser,
-            ranking: curUserIndex
+            ranking: curUserIndex,
         });
     }
     catch (err) {

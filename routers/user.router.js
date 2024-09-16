@@ -9,6 +9,7 @@ router.get("/friend/:id", userCtr.getFriends);
 
 
 
+
 router.put("/timeLimit/:id", userCtr.updateTimeLimit);
 router.put("/power/:id", userCtr.updatePower);
 
