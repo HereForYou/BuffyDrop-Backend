@@ -56,7 +56,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                 owner.friends.push(tgId);
                                 owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
-                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} Join me because there’s a reason for spreading the BUFFY buzz. It’s now or never for the BUFFY drop!🍖`, {
+                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} you invited to Buffy just got added, and you earned a reward! Check your tokens now!🔥🍖`, {
                                     reply_markup: JSON.stringify({
                                         inline_keyboard: [
                                             [
