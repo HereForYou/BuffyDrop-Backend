@@ -44,9 +44,16 @@ var UserSchema = new Schema(
         },
         friends: [
             {
-                type: String,
-                required: true,
-            },
+                id: {
+                    type: String,
+                    required: true,
+                },
+                revenue: {
+                    type: Number,
+                    default: 0
+                }
+            }
+
         ],
         task: [
             {

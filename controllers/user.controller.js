@@ -49,11 +49,12 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
-                                // console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
-                                owner.friends.push(tgId);
+                                console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
+                                // owner.friends.push(tgId, inviteRevenue * user.totalPoints);
+                                owner.friends.push({ id: tgId, revenue: inviteRevenue * user.totalPoints });
                                 owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
                                 await bot.telegram.sendMessage(owner.tgId, `@${user.userName} Join me because there’s a reason for spreading the BUFFY buzz. It’s now or never for the BUFFY drop!🍖`, {
@@ -216,15 +217,19 @@ exports.getFriends = catchAsync(async (req, res) => {
     let tgId = req.params.id;
     try {
         const user = await User.findOne({ tgId: tgId });
+        // console.log("friend user ", user);
+
         let friends = user.friends;
         let friendsInfo = [];
         if (friends) {
             await Promise.all(friends.map(async (friend) => {
-                let nFriend = await User.findOne({ tgId: friend });
+                let nFriend = await User.findOne({ tgId: friend.id });
                 if (nFriend) {
-                    friendsInfo.push(nFriend);
+                    friendsInfo.push({ Info: nFriend, revenue: friend.revenue });
                 }
             }));
+            // console.log("friend result", friendsInfo);
+
             return res.status(200).send({
                 inviteLink: user.inviteLink,
                 friendsInfo: friendsInfo,
