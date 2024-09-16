@@ -188,7 +188,7 @@ const taskList = [
         title: "Join our TG channel",
         image: "tg_icon.png",
         profit: 1000,
-        link: "https://t.me/BuffyDrops"
+        link: "https://t.me/BuffyDrop"
     },
     {
         id: "twitter",
