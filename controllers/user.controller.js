@@ -8,7 +8,6 @@ const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var { BOT_TOKEN } = require("../config/Constants");
-
 var cron = require('node-cron');
 
 const bot = new Telegraf(BOT_TOKEN);
@@ -34,7 +33,7 @@ exports.getUser = catchAsync(async (req, res) => {
     try {
         const user = await User.findOne({ tgId: tgId })
         if (user) {
-            return res.status(200).send({ user });
+            return res.status(200).send({ user, signIn: true });
         } else {
             let inviteLink = uuidv4();
             const setting = await Setting.findOne();
@@ -44,7 +43,7 @@ exports.getUser = catchAsync(async (req, res) => {
             const countDown = dailyTimeLimit.value * 60;
             const rank = await User.find();
             const totalPoints = rank.length + 1;
-
+            const joinRank = totalPoints
             if (start_param)
             ///invited user
             {
@@ -53,11 +52,11 @@ exports.getUser = catchAsync(async (req, res) => {
                     User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
-                                console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
+                                // console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
                                 owner.friends.push(tgId);
                                 owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
-                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} has joined your Buffy! 🌱🚀Get ready for more fun together! 👥💪`, {
+                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} Join me because there’s a reason for spreading the BUFFY buzz. It’s now or never for the BUFFY drop!🍖`, {
                                     reply_markup: JSON.stringify({
                                         inline_keyboard: [
                                             [
@@ -72,7 +71,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                     })
                                 });
                             }
-                            return res.status(200).send({ user });
+                            return res.status(200).send({ user, signIn: false });
                         })
                         .catch((err) => {
                             handleError(err, res);
@@ -84,10 +83,8 @@ exports.getUser = catchAsync(async (req, res) => {
             }
             //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power, totalPoints })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power, totalPoints, joinRank })
                     .then(async (user) => {
-                        // const totalCount = await User.countDocuments({});
-                        // const totalCount = await User.countDocuments({});
                         let reward;
                         if (totalPoints < 11) {
                             reward = 0.1001;
@@ -98,11 +95,11 @@ exports.getUser = catchAsync(async (req, res) => {
                         else if (totalPoints < 100001) { reward = 0.065; }
                         else if (totalPoints < 1000001) { reward = 0.0190; }
                         else { reward = totalPoints * 0.01; }
-                        console.log('invite reward amount-------------', reward)
+                        // console.log('invite reward amount-------------', reward, totalPoints)
                         let settingDoc = await Setting.findOne();
                         settingDoc.inviteRevenue = reward;
                         await settingDoc.save();
-                        return res.status(200).send({ user });
+                        return res.status(200).send({ user, signIn: false });
                     })
                     .catch((err) => {
                         handleError(err, res);
@@ -262,16 +259,19 @@ exports.getAllUsers = catchAsync(async (req, res) => {
 
 exports.getTopUsers = catchAsync(async (req, res) => {
     let tgId = req.params.id;
+    console.log("tgId---------------------", tgId);
+
     let numUsers = parseInt(req.query.num);
     try {
         const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1 }).sort({ totalPoints: -1 }).limit(numUsers);
         let curUser = await User.findOne({ tgId });
         let curUserIndex = await User.countDocuments({ totalPoints: { $gt: curUser.totalPoints } });
+        // console.log("topUser", topUsers, "----------------", "curUser", curUser);
 
         return res.status(200).json({
             topUsers: topUsers,
             curUser: curUser,
-            ranking: curUserIndex
+            ranking: curUserIndex,
         });
     }
     catch (err) {
