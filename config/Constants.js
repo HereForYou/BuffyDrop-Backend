@@ -206,7 +206,7 @@ const taskList = [
     },
     {
         id: "youtube",
-        title: "Follow us on Instagram",
+        title: "Follow our YouTube Channel",
         image: "youtube_icon.png",
         profit: 1000,
         link: "https://www.youtube.com/c/BuffyDrops"
