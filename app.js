@@ -85,6 +85,10 @@ const cert = BOT_CERTIFICATION;
 mongoose().then(async () => {
     await SettingInitialize();
     var app = express();
+    app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', 'https://dog82027.vercel.app');
+        next();
+    });
     var server = http.createServer(app);
     // app.all(/.*/, (req, res) => {
     //     res.statusCode = 404;
