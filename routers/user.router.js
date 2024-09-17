@@ -1,6 +1,6 @@
 var router = require("express").Router(),
     userCtr = require("../controllers/user.controller");
-
+// router.post("/joinTG/:id", userCtr.getJoin);
 router.post("/:id", userCtr.getUser);
 router.put("/count/:id", userCtr.updateCountDown);
 router.put("/:id", userCtr.updatePoints);

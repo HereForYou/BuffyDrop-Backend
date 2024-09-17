@@ -252,6 +252,8 @@ const admin = [
 const inviteRevenue = 0.1001; // 1000 Buffy
 const dailyRevenue = 1000; // 1000 Buffy
 // const BOT_TOKEN = '7510686102:AAGUu58pUBz5-2I6fQhwSktEXkxUzVZouqs';//test bot
+const TELEGRAM_TOKEN = '7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0'
+const GROUP_USERNAME = '@BuffyDrop44'
 const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';
 const BOT_DESCRIPTION = `
 How early did you join Buffy?  🍖
@@ -263,4 +265,4 @@ const BOT_CERTIFICATION = '';
 const WEB_SITE_URL = 'https://Buffy.com';
 const WEB_APP_URL = 'https://dog82027.vercel.app'
 
-module.exports = { dailyTimeLimitList, powerList, levelStandard, taskList, admin, inviteRevenue, dailyRevenue, dexList, BOT_TOKEN, BOT_DESCRIPTION, BOT_CERTIFICATION, WEB_SITE_URL, WEB_APP_URL };
+module.exports = { dailyTimeLimitList, powerList, levelStandard, taskList, admin, inviteRevenue, dailyRevenue, dexList, BOT_TOKEN, BOT_DESCRIPTION, BOT_CERTIFICATION, WEB_SITE_URL, WEB_APP_URL, TELEGRAM_TOKEN, GROUP_USERNAME };

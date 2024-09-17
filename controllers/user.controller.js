@@ -7,10 +7,12 @@ const catchAsync = require("../config/utils/catchAsync");
 const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
-var { BOT_TOKEN } = require("../config/Constants");
+// var { BOT_TOKEN } = require("../config/Constants");
 var cron = require('node-cron');
-
-const bot = new Telegraf(BOT_TOKEN);
+// var TGbot = require("../app.js")
+// const TelegramBot = require('node-telegram-bot-api')
+// const TGbot = new TelegramBot(TELEGRAM_TOKEN, { polling: true })
+// const TGbot = new Telegraf(TELEGRAM_TOKEN_TOKEN);
 
 // const cycleTime = 10;
 
@@ -57,7 +59,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                 owner.friends.push({ id: tgId, revenue: inviteRevenue * user.totalPoints });
                                 owner.totalPoints += inviteRevenue * user.totalPoints;
                                 await owner.save();
-                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} you invited to Buffy just got added, and you earned a reward! Check your tokens now!🔥🍖`, {
+                                await bot.telegram.sendMessage(owner.tgId, `@${user.userName} the person you invited to Buffy has just been added, and you earned a reward! Check your tokens now! 🔥🍖`, {
                                     reply_markup: JSON.stringify({
                                         inline_keyboard: [
                                             [
