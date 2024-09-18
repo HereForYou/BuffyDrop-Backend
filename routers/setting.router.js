@@ -7,7 +7,6 @@ router.put("/update/task/:id", settingCtr.updateTask);
 router.put("/update/timeLimit/:id", settingCtr.updateTimeLimit);
 router.put("/update/power/:id", settingCtr.updatePower);
 router.put("/update/admin/:id", settingCtr.updateAdmin);
-// router.put("/update/dex/:id", settingCtr.updateDex);
 router.put("/update/dex/img", settingCtr.updateDexImg);
 
 router.put("/update/dailyRevenue", settingCtr.updateDailyRevenue);

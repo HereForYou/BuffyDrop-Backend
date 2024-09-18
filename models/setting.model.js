@@ -3,34 +3,6 @@ var mongoose = require("mongoose"),
 
 var SettingSchema = new Schema(
     {
-        dailyTimeLimitList: [{
-            id: {
-                type: Number,
-                default: 1
-            },
-            value: {
-                type: Number,
-                default: 10
-            },
-            coinsToBoost: {
-                type: Number,
-                default: 0
-            },
-        }],
-        powerList: [{
-            id: {
-                type: Number,
-                default: 1
-            },
-            value: {
-                type: Number,
-                default: 10
-            },
-            coinsToBoost: {
-                type: Number,
-                default: 0
-            },
-        }],
         taskList: [{
             id: {
                 type: String,
@@ -51,31 +23,6 @@ var SettingSchema = new Schema(
             link: {
                 type: String,
                 default: ""
-            }
-        }],
-        dexList: [
-            {
-                id: {
-                    type: Number,
-                    default: 0
-                },
-                name: {
-                    type: String,
-                },
-                img: {
-                    type: String,
-                    default: ""
-                }
-            }
-        ],
-        levelStandard: [{
-            level: {
-                type: Number,
-                default: 0
-            },
-            coinsToLevelUp: {
-                type: Number,
-                default: 0
             }
         }],
         admin: [

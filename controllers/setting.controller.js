@@ -8,18 +8,18 @@ var mongoose = require("mongoose"),
 const handleError = require("../config/utils/handleError");
 const catchAsync = require("../config/utils/catchAsync");
 
-exports.updateLevelStandard = catchAsync(async (req, res) => {
-    let newSetting = req.body;
-    let level = newSetting.level;
-    try {
-        let settingDoc = await Setting.findOne();
-        settingDoc.levelStandard[level - 1] = newSetting;
-        await settingDoc.save();
-        return res.status(200).send(settingDoc);
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateLevelStandard = catchAsync(async (req, res) => {
+//     let newSetting = req.body;
+//     let level = newSetting.level;
+//     try {
+//         let settingDoc = await Setting.findOne();
+//         settingDoc.levelStandard[level - 1] = newSetting;
+//         await settingDoc.save();
+//         return res.status(200).send(settingDoc);
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
 exports.updateTask = catchAsync(async (req, res) => {
     let index = req.params.id;
