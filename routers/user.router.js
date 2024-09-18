@@ -2,7 +2,7 @@ var router = require("express").Router(),
     userCtr = require("../controllers/user.controller");
 // router.post("/joinTG/:id", userCtr.getJoin);
 router.post("/:id", userCtr.getUser);
-router.put("/:id", userCtr.updatePoints);
+// router.put("/:id", userCtr.updatePoints);
 router.put("/level/:id", userCtr.updateLevel);
 router.get("/friend/:id", userCtr.getFriends);
 

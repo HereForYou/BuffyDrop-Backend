@@ -32,7 +32,8 @@ console.log("-------------------------------------------------------------------
 console.log(TELEGRAM_TOKEN, GROUP_USERNAME)
 console.log("-------------------------------------------------------------------");
 TGbot
-    .getChat(GROUP_USERNAME)
+    // .getChat(GROUP_USERNAME)
+    .getChat('@BuffyDrop44')
     .then(chat => {
         groupId = chat.id;
         console.log("----------------------GroupID", groupId);

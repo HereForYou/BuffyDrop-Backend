@@ -1,5 +1,7 @@
 
-const taskList = [////Daily task list ----->Database schema
+const taskList = [
+    //This is default taskList
+    //If you are want change, this is change.
     {
         id: "telegram",
         title: "Join our TG channel",
@@ -52,11 +54,12 @@ const admin = [
 const inviteRevenue = 0.1001; // 1000 Buffy
 const dailyRevenue = 1000; // 1000 Buffy
 // const BOT_TOKEN = '7510686102:AAGUu58pUBz5-2I6fQhwSktEXkxUzVZouqs';//test bot
-// const TELEGRAM_TOKEN = '7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0'
-const TELEGRAM_TOKEN = "7227899625:AAHPFS9s6RqDgwOj2XJMWi-_bnWT1bAWxaI"///Telegram Channel admin bot token
 
-const GROUP_USERNAME = '@BuffyDrop'//Telegram Channel Name
-const BOT_TOKEN = '6889012779:AAFkk_WoA08aACylwba7Mkp9OEDCatnvcbc';///Telegram Mini App bot token
+const BOT_TOKEN = "6889012779:AAFkk_WoA08aACylwba7Mkp9OEDCatnvcbc";//This is telegram mini app bot token
+// const TELEGRAM_TOKEN = '7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0'
+const TELEGRAM_TOKEN = "7227899625:AAHPFS9s6RqDgwOj2XJMWi-_bnWT1bAWxaI"//This is telegram channel admin bot token.
+
+const GROUP_USERNAME = '@BuffyDrop'
 const BOT_DESCRIPTION = `
 How early did you join Buffy?  🍖
 Discover your rank and unlock your reward!
@@ -65,6 +68,6 @@ const BOT_CERTIFICATION = '';
 // const WEB_APP_URL = 'https://Buffy-miniapp.vercel.app'//test
 // const WEB_APP_URL = 'https://app.Buffy.com';//
 const WEB_SITE_URL = 'https://t.me/BuffyDrop';
-const WEB_APP_URL = 'https://dog82027.vercel.app'
+const WEB_APP_URL = 'https://buffydrop.xyz/'
 
 module.exports = { taskList, admin, inviteRevenue, dailyRevenue, BOT_TOKEN, BOT_DESCRIPTION, BOT_CERTIFICATION, WEB_SITE_URL, WEB_APP_URL, TELEGRAM_TOKEN, GROUP_USERNAME };
