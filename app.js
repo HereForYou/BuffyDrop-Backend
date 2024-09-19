@@ -81,68 +81,6 @@ TGbot.onText(/\/start/, (msg) => {
     // });
 
     console.log('Bot is running...');
-    // Promise.all([
-    //     TGbot.sendAnimation(groupId, gifPath),
-    //     TGbot.sendMessage(groupId, `${desText1}\n\n${midText1}\n${cert1}`, {
-    //         reply_markup: {
-    //             inline_keyboard: [
-    //                 [
-    //                     {
-    //                         text: '🍖 Click to launch Buffy',
-    //                         callback_data: 'launch_buffy', // Use callback_data for button actions
-    //                     }
-    //                 ]
-    //             ]
-    //         }
-    //     })
-    // ])
-    //     .then(() => {
-    //         console.log('Animation and message sent successfully.');
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error sending animation or message:', error);
-    //     });
-    // TGbot.sendAnimation(groupId, gifPath) // Use gifPath for local file or URL for remote file
-    //     .then(() => {
-    //         TGbot.sendMessage(groupId, `${desText1}\n\n${midText1}\n${cert1}`, {
-    //             reply_markup: {
-    //                 inline_keyboard: [
-    //                     [
-    //                         {
-    //                             text: '🍖 Click to launch Buffy',
-    //                             callback_data: 'launch_buffy', // Use callback_data for button actions
-    //                         }
-    //                     ]
-    //                 ]
-    //             }
-    //         });
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error sending animation:', error);
-    //     });
-
-    // TGbot.sendAnimation(
-    //     groupId,
-    //     { source: "video.gif" },
-    //     {
-    //         caption: `${desText1}\n*${midText1}*\n${cert1}`,
-    //         parse_mode: 'Markdown',
-    //         reply_markup: {
-    //             inline_keyboard: [
-    //                 [
-    //                     {
-    //                         text: `🍖 Click to launch Buffy`,
-    //                         web_app: { url: WEB_APP_URL }
-    //                     }
-    //                 ]
-    //             ]
-    //         }
-    //     }
-    // ).catch(error => {
-    //     console.error("Error sending animation:", error);
-    //     TGbot.sendMessage(groupId, "Sorry, I couldn't send the animation. Here's the message instead:\n\n" +
-    //         `${desText1}\n${midText1}\n${cert1}`);
-    // });
 });
 TGbot.on('callback_query', (callbackQuery) => {
     const groupId = callbackQuery.message.chat.id;
@@ -160,42 +98,6 @@ TGbot.on("polling_error", (error) => {
     console.log("Polling error:", error);
 });
 
-// TGbot.onText(/\/start/, msg => {
-//     chatId = msg.chat.id
-//     const userID = msg.from.id
-//     // USER_ID = chatId;
-//     // console.log('--//---myChatID----//---', chatId)
-//     const welcomeMessage = 'Hello! Every One! '
-//     // Send the welcome message with the inline keyboard
-//     TGbot.sendMessage(groupId, welcomeMessage)
-// })
-// TGbot.on('message', async msg => {
-//     var _a
-//     chatId = msg.chat.id
-//     USER_ID = chatId
-//     const userID = msg.from.id
-//     USER_NAME = (_a = msg.from) === null || _a === void 0 ? void 0 : _a.username
-//     if (msg.chat.id === groupId && msg.from.id === userID) {
-//         console.log(
-//             `User ${msg.from.username} (ID: ${msg.from.id}) posted a message in the group.`
-//         )
-//     }
-// })
-// c(async (req, res) => {
-
-// const gID = require("../app.js")
-// let USER_TEL_ID = req.params.id;
-// console.log(USER_TEL_ID);
-// TGbot
-//     .getChatMember(gID.GROUP_ID, USER_TEL_ID)
-//     .then(() => {
-//         res.status(200).send({ status: true })
-//     })
-//     .catch(err => {
-//         res.status(200).send({ status: false })
-//     })
-// })
-/////-------------------------
 const desText = BOT_DESCRIPTION;
 const cert = BOT_CERTIFICATION;
 
@@ -207,47 +109,43 @@ mongoose().then(async () => {
         next();
     });
     var server = http.createServer(app);
-    // app.all(/.*/, (req, res) => {
-    //     res.statusCode = 404;
-    //     res.send("Invalid Endpoint.");
+    // const io = init(server);
+
+    // io.on('connection', (socket) => {
+    //     console.log('A user connected');
+
+    //     socket.on('disconnect', () => {
+    //         console.log('A user disconnected');
+    //     });
     // });
-    const io = init(server);
-
-    io.on('connection', (socket) => {
-        console.log('A user connected');
-
-        socket.on('disconnect', () => {
-            console.log('A user disconnected');
-        });
-    });
 
     app.get('/', (req, res) => {
         res.send('Hello World!');
     });
-    const options = {
-        key: fs.readFileSync("./cert/privkey.pem"),
-        cert: fs.readFileSync("./cert/fullchain.pem")
-    };
+    // const options = {
+    //     key: fs.readFileSync("./cert/privkey.pem"),
+    //     cert: fs.readFileSync("./cert/fullchain.pem")
+    // };
 
-    https.createServer(options, app).listen(443, "78.141.204.6", () => {
-        console.log(`Server running at https://78.141.204.6/`);
-        app.post('/api/user/joinTG/:id', (req, res) => {
-            let USER_TEL_ID = req.params.id;
-            console.log(USER_TEL_ID);
-            TGbot
-                .getChatMember(groupId, USER_TEL_ID)
-                .then(() => {
-                    res.status(200).send({ status: true })
-                })
-                .catch(err => {
-                    res.status(200).send({ status: false })
-                })
-        })
-    });
-
-    // server.listen(config.port, () => {
-    //     console.log(`Server is running at http://localhost:${config.port}`)
+    // https.createServer(options, app).listen(443, "78.141.204.6", () => {
+    //     console.log(`Server running at https://78.141.204.6/`);
+    //     app.post('/api/user/joinTG/:id', (req, res) => {
+    //         let USER_TEL_ID = req.params.id;
+    //         console.log(USER_TEL_ID);
+    //         TGbot
+    //             .getChatMember(groupId, USER_TEL_ID)
+    //             .then(() => {
+    //                 res.status(200).send({ status: true })
+    //             })
+    //             .catch(err => {
+    //                 res.status(200).send({ status: false })
+    //             })
+    //     })
     // });
+
+    server.listen(config.port, () => {
+        console.log(`Server is running at http://localhost:${config.port}`)
+    });
 
 
 });

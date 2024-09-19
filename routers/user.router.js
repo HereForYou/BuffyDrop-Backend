@@ -3,11 +3,11 @@ var router = require("express").Router(),
 // router.post("/joinTG/:id", userCtr.getJoin);
 router.post("/:id", userCtr.getUser);
 // router.put("/:id", userCtr.updatePoints);
-router.put("/level/:id", userCtr.updateLevel);
+// router.put("/level/:id", userCtr.updateLevel);
 router.get("/friend/:id", userCtr.getFriends);
 
-router.put("/timeLimit/:id", userCtr.updateTimeLimit);
-router.put("/power/:id", userCtr.updatePower);
+// router.put("/timeLimit/:id", userCtr.updateTimeLimit);
+// router.put("/power/:id", userCtr.updatePower);
 
 router.get("/all/:id", userCtr.getAllUsers);
 router.get("/top/:id", userCtr.getTopUsers);

@@ -7,27 +7,21 @@ const catchAsync = require("../config/utils/catchAsync");
 const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
-// var { BOT_TOKEN } = require("../config/Constants");
 var cron = require('node-cron');
-// var TGbot = require("../app.js")
-// const TelegramBot = require('node-telegram-bot-api')
-// const TGbot = new TelegramBot(TELEGRAM_TOKEN, { polling: true })
-// const TGbot = new Telegraf(TELEGRAM_TOKEN_TOKEN);
-
 // const cycleTime = 10;
 
-cron.schedule('0 0 * * *', async () => {// 24hr
-    // cron.schedule('0 * * * *', async () => {// 1hr
-    // cron.schedule(`*/${cycleTime} * * * *`, async () => {
-    let AllUsers = await User.find({});
-    await Promise.all(
-        AllUsers.map(async (user) => {
-            user.countDown = user.dailyTimeLimit.value * 60;
-            user.task = user.task.filter(task => task !== 'dailyTask');
-            await user.save();
-        })
-    );
-});
+// cron.schedule('0 0 * * *', async () => {// 24hr
+//     // cron.schedule('0 * * * *', async () => {// 1hr
+//     // cron.schedule(`*/${cycleTime} * * * *`, async () => {
+//     let AllUsers = await User.find({});
+//     await Promise.all(
+//         AllUsers.map(async (user) => {
+//             user.countDown = user.dailyTimeLimit.value * 60;
+//             user.task = user.task.filter(task => task !== 'dailyTask');
+//             await user.save();
+//         })
+//     );
+// });
 
 exports.getUser = catchAsync(async (req, res) => {
     let tgId = req.params.id;
@@ -39,10 +33,10 @@ exports.getUser = catchAsync(async (req, res) => {
         } else {
             let inviteLink = uuidv4();
             const setting = await Setting.findOne();
-            const dailyTimeLimit = setting.dailyTimeLimitList[0];
-            const power = setting.powerList[0];
+            // const dailyTimeLimit = setting.dailyTimeLimitList[0];
+            // const power = setting.powerList[0];
             const inviteRevenue = setting.inviteRevenue;
-            const countDown = dailyTimeLimit.value * 60;
+            // const countDown = dailyTimeLimit.value * 60;
             const rank = await User.find();
             const totalPoints = rank.length + 1;
             const joinRank = totalPoints
@@ -86,7 +80,7 @@ exports.getUser = catchAsync(async (req, res) => {
             }
             //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, countDown, dailyTimeLimit, power, totalPoints, joinRank })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank })
                     .then(async (user) => {
                         let reward;
                         if (totalPoints < 11) {
@@ -134,65 +128,65 @@ exports.updatePoints = catchAsync(async (req, res) => {
     }
 });
 
-exports.updateLevel = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { newLevel } = req.body;
-    try {
-        const result = await User.findOneAndUpdate(
-            { tgId: tgId }, // Filter
-            { $set: { level: newLevel } }, // Update
-        );
-        if (!result) {
-            return res.status(404).send({ message: "User not found" });
-        }
-        return res.status(200).send(result);
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateLevel = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { newLevel } = req.body;
+//     try {
+//         const result = await User.findOneAndUpdate(
+//             { tgId: tgId }, // Filter
+//             { $set: { level: newLevel } }, // Update
+//         );
+//         if (!result) {
+//             return res.status(404).send({ message: "User not found" });
+//         }
+//         return res.status(200).send(result);
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
-exports.updateTimeLimit = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { newTimeLimit, fee, plusCountDown } = req.body;
-    try {
-        const user = await User.findOne({ tgId: tgId });
-        const setting = await Setting.findOne();
-        const nextTimeLimit = setting.dailyTimeLimitList[user.dailyTimeLimit.id];
-        if (user && fee >= nextTimeLimit.coinsToBoost && user.totalPoints >= fee) {
-            user.dailyTimeLimit = nextTimeLimit;
-            user.totalPoints -= fee;
-            user.countDown = nextTimeLimit.value * 60;
-            await user.save();
-            return res.status(200).send(true);
-        }
-        else {
-            return res.status(404).send({ message: "User not found" });
-        }
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateTimeLimit = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { newTimeLimit, fee, plusCountDown } = req.body;
+//     try {
+//         const user = await User.findOne({ tgId: tgId });
+//         const setting = await Setting.findOne();
+//         const nextTimeLimit = setting.dailyTimeLimitList[user.dailyTimeLimit.id];
+//         if (user && fee >= nextTimeLimit.coinsToBoost && user.totalPoints >= fee) {
+//             user.dailyTimeLimit = nextTimeLimit;
+//             user.totalPoints -= fee;
+//             user.countDown = nextTimeLimit.value * 60;
+//             await user.save();
+//             return res.status(200).send(true);
+//         }
+//         else {
+//             return res.status(404).send({ message: "User not found" });
+//         }
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
-exports.updatePower = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { newPower, fee } = req.body;
-    try {
-        const user = await User.findOne({ tgId: tgId });
-        const setting = await Setting.findOne();
-        const nextPower = setting.powerList[user.power.id];
-        if (user && fee >= nextPower.coinsToBoost && user.totalPoints >= fee) {
-            user.power = nextPower;
-            user.totalPoints -= fee;
-            await user.save();
-            return res.status(200).send(true);
-        }
-        else {
-            return res.status(404).send({ message: "User not found" });
-        }
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updatePower = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { newPower, fee } = req.body;
+//     try {
+//         const user = await User.findOne({ tgId: tgId });
+//         const setting = await Setting.findOne();
+//         const nextPower = setting.powerList[user.power.id];
+//         if (user && fee >= nextPower.coinsToBoost && user.totalPoints >= fee) {
+//             user.power = nextPower;
+//             user.totalPoints -= fee;
+//             await user.save();
+//             return res.status(200).send(true);
+//         }
+//         else {
+//             return res.status(404).send({ message: "User not found" });
+//         }
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
 exports.updateTask = catchAsync(async (req, res) => {
     let tgId = req.params.id;
@@ -348,39 +342,39 @@ exports.getTotalPoints = catchAsync(async (req, res) => {
     }
 });
 
-exports.updateCountDown = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { id } = req.body;
-    try {
-        const result = await User.findOneAndUpdate(
-            { tgId: tgId },
-            { $set: { intervalId: id } },
-            { new: true }
-        );
-        if (!result) {
-            return res.status(404).send({ message: "User not found" });
-        }
-        return res.status(200).send(result);
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateCountDown = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { id } = req.body;
+//     try {
+//         const result = await User.findOneAndUpdate(
+//             { tgId: tgId },
+//             { $set: { intervalId: id } },
+//             { new: true }
+//         );
+//         if (!result) {
+//             return res.status(404).send({ message: "User not found" });
+//         }
+//         return res.status(200).send(result);
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
-exports.updateDex = catchAsync(async (req, res) => {
-    const tgId = req.params.id;
-    let { dex } = req.body;
-    try {
-        const result = await User.findOneAndUpdate(
-            { tgId: tgId },
-            { $set: { dex: dex } },
-            { new: true }
-        );
-        if (!result) {
-            return res.status(404).send({ message: "User not found" });
-        }
-        return res.status(200).send(result);
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateDex = catchAsync(async (req, res) => {
+//     const tgId = req.params.id;
+//     let { dex } = req.body;
+//     try {
+//         const result = await User.findOneAndUpdate(
+//             { tgId: tgId },
+//             { $set: { dex: dex } },
+//             { new: true }
+//         );
+//         if (!result) {
+//             return res.status(404).send({ message: "User not found" });
+//         }
+//         return res.status(200).send(result);
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 

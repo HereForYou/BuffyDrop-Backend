@@ -6,7 +6,7 @@ module.exports = () => new Promise((resolve) => {
     mongoose.connect(config.db, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: "BuffyDrop"
+        // dbName: "BuffyDrop"
     });
 
     mongoose.connection.on("connected", () => {
