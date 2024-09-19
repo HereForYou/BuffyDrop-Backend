@@ -68,7 +68,7 @@ How early did you join Buffy?  🍖
 Discover your rank and unlock your reward!
 `;
 const BOT_CERTIFICATION = '';
-const WEB_SITE_URL = 'https:/@Dog82027bot'//test
+const WEB_SITE_URL = 'https://t.me/Dog82027bot'//test
 const WEB_APP_URL = 'https://dog82027.vercel.app';//
 // const WEB_SITE_URL = 'https://t.me/BuffyDrop';
 // const WEB_APP_URL = 'https://buffydrop.xyz/'
