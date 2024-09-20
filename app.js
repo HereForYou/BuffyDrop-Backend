@@ -103,9 +103,14 @@ const cert = BOT_CERTIFICATION;
 
 mongoose().then(async () => {
     await SettingInitialize();
+    const allowedOrigins = ['http://localhost:5173', 'https://buffydrop.xyz'];
     var app = express();
     app.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Origin', 'https://dog82027.vercel.app');
+        const origin = req.headers.origin;
+        if (allowedOrigins.includes(origin)) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+        }
+        // res.setHeader('Access-Control-Allow-Origin', ['http://localhost:5173', 'https://buffydrop.xyz']);
         next();
     });
     var server = http.createServer(app);
@@ -122,30 +127,46 @@ mongoose().then(async () => {
     app.get('/', (req, res) => {
         res.send('Hello World!');
     });
-    // const options = {
-    //     key: fs.readFileSync("./cert/privkey.pem"),
-    //     cert: fs.readFileSync("./cert/fullchain.pem")
-    // };
+    app.post('/api/user/joinTG/:id', (req, res) => {
+        let USER_TEL_ID = req.params.id;
+        console.log("user id---", USER_TEL_ID, "--goroup id----", groupId);
+        TGbot
+            .getChatMember(groupId, USER_TEL_ID)
+            .then(() => {
+                console.log("this id exist in this channel")
+                res.status(200).send({ status: true })
+            })
+            .catch(err => {
+                console.log("this id don't exist in this channel")
+                res.status(200).send({ status: false })
+            })
+    })
+    const options = {
+        key: fs.readFileSync("./cert/privkey.pem"),
+        cert: fs.readFileSync("./cert/fullchain.pem")
+    };
 
-    // https.createServer(options, app).listen(443, "78.141.204.6", () => {
-    //     console.log(`Server running at https://78.141.204.6/`);
-    //     app.post('/api/user/joinTG/:id', (req, res) => {
-    //         let USER_TEL_ID = req.params.id;
-    //         console.log(USER_TEL_ID);
-    //         TGbot
-    //             .getChatMember(groupId, USER_TEL_ID)
-    //             .then(() => {
-    //                 res.status(200).send({ status: true })
-    //             })
-    //             .catch(err => {
-    //                 res.status(200).send({ status: false })
-    //             })
-    //     })
-    // });
-
-    server.listen(config.port, () => {
-        console.log(`Server is running at http://localhost:${config.port}`)
+    https.createServer(options, app).listen(443, "78.141.204.6", () => {
+        console.log(`Server running at https://78.141.204.6/`);
+        app.post('/api/user/joinTG/:id', (req, res) => {
+            let USER_TEL_ID = req.params.id;
+            console.log("user id---", USER_TEL_ID, "--goroup id----", groupId);
+            TGbot
+                .getChatMember(groupId, USER_TEL_ID)
+                .then(() => {
+                    console.log("this id exist in this channel")
+                    res.status(200).send({ status: true })
+                })
+                .catch(err => {
+                    console.log("this id don't exist in this channel")
+                    res.status(200).send({ status: false })
+                })
+        })
     });
+
+    // server.listen(config.port, () => {
+    //     console.log(`Server is running at http://localhost:${config.port}`)
+    // });
 
 
 });

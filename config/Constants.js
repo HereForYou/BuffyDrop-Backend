@@ -5,38 +5,46 @@ const taskList = [
     {
         id: "telegram",
         title: "Join our TG channel",
-        image: "tg_icon.png",
-        profit: 1000,
+        image: "tg_icon.webp",
+        profit: 20000,
         link: "https://t.me/BuffyDrop"
     },
     {
         id: "twitter",
-        title: "Follow your X account",
-        image: "twitter_icon.png",
-        profit: 1000,
+        title: "Follow our X account",
+        image: "twitter_icon.webp",
+        profit: 20000,
         link: "https://twitter.com/BuffyDrop"
     },
     {
         id: "instagram",
         title: "Follow us on Instagram",
-        image: "instagram_icon.png",
-        profit: 1000,
-        link: "https://www.instagram.com/BuffyDrop"
+        image: "instagram_icon.webp",
+        profit: 10000,
+        link: "https://www.instagram.com/buffydrop?igsh=Zmxrczd5cjJ5Yjlj"
     },
     {
         id: "youtube",
         title: "Follow our YouTube Channel",
-        image: "youtube_icon.png",
-        profit: 1000,
-        link: "https://www.youtube.com/c/BuffyDrop"
+        image: "youtube_icon.webp",
+        profit: 10000,
+        link: "https://youtube.com/@buffydrop?si=zet8N0kifiHK-P0M"
     },
     {
         id: "tiktok",
         title: "Join out TT channel",
-        image: "tt_icon.png",
-        profit: 1000,
-        link: "https://www.tiktok.com/@BuffyDrop"
+        image: "tt_icon.webp",
+        profit: 10000,
+        link: "https://www.tiktok.com/@buffydrop?_t=8pqfSfYwRrj&_r=1"
     },
+    {
+        id: "ceo",
+        title: "Follow CEO on X",
+        image: "twitter_icon.webp",
+        profit: 15000,
+        link: "https://x.com/buffydrops?s=21&t=iIfR9umQdaKG-BCu8ttirQ"
+    }
+
 ];
 
 
@@ -53,24 +61,23 @@ const admin = [
 
 const inviteRevenue = 0.1001; // 1000 Buffy
 const dailyRevenue = 1000; // 1000 Buffy
-const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';//test bot
+// const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';//test bot
 
-// const BOT_TOKEN = "6889012779:AAFkk_WoA08aACylwba7Mkp9OEDCatnvcbc";//This is telegram mini app bot token
-// const TELEGRAM_TOKEN = '7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0'
-const TELEGRAM_TOKEN = "7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0"//This is test telegram channel admin bot token.
-// const TELEGRAM_TOKEN = "7227899625:AAHPFS9s6RqDgwOj2XJMWi-_bnWT1bAWxaI"//This is telegram channel admin bot token.
+const BOT_TOKEN = "6889012779:AAHzW8jDE_BMTczZQAkEg4eE-tvOsJIgJIo";//This is telegram mini app bot token
+// const TELEGRAM_TOKEN = "7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0"//This is test telegram channel admin bot token.
+const TELEGRAM_TOKEN = "7227899625:AAF7WDFl4-_j01dIw5fivATi7jGWD-Ai3FM"//This is telegram channel admin bot token.
 
-const GROUP_USERNAME = '@BuffyDrop44'///test
-// const GROUP_USERNAME = '@BuffyDrop'
+// const GROUP_USERNAME = '@BuffyDrop44'///test
+const GROUP_USERNAME = '@BuffyDrop'
 
 const BOT_DESCRIPTION = `
 How early did you join Buffy?  🍖
 Discover your rank and unlock your reward!
 `;
 const BOT_CERTIFICATION = '';
-const WEB_SITE_URL = 'https://t.me/Dog82027bot'//test
-const WEB_APP_URL = 'https://dog82027.vercel.app';//
-// const WEB_SITE_URL = 'https://t.me/BuffyDrop';
-// const WEB_APP_URL = 'https://buffydrop.xyz/'
+// const WEB_SITE_URL = 'https://t.me/Dog82027bot'//test
+// const WEB_APP_URL = 'https://dog82027.vercel.app';//test 
+const WEB_SITE_URL = 'https://t.me/BuffyDrop';
+const WEB_APP_URL = 'https://buffydrop.xyz'
 
 module.exports = { taskList, admin, inviteRevenue, dailyRevenue, BOT_TOKEN, BOT_DESCRIPTION, BOT_CERTIFICATION, WEB_SITE_URL, WEB_APP_URL, TELEGRAM_TOKEN, GROUP_USERNAME };

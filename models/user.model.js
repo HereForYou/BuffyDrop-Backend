@@ -62,6 +62,7 @@ var UserSchema = new Schema(
             default: 0,
         },
         joinRank: { type: Number, default: 0 },
+        style: { type: String, default: 'bg-white text-black' }
     },
     {
         timestamps: true,

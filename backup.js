@@ -67,6 +67,10 @@ var UserSchema = new Schema(
         intervalId: {
             type: Number,
             default: 0,
+        },
+        style: {
+            type: String,
+            default: 'bg-white text-black'
         }
     },
     {

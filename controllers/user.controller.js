@@ -25,7 +25,7 @@ var cron = require('node-cron');
 
 exports.getUser = catchAsync(async (req, res) => {
     let tgId = req.params.id;
-    let { firstName, lastName, userName, start_param } = req.body;
+    let { firstName, lastName, userName, start_param, style } = req.body;
     try {
         const user = await User.findOne({ tgId: tgId })
         if (user) {
@@ -45,7 +45,7 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank, style })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
                                 console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
@@ -80,7 +80,7 @@ exports.getUser = catchAsync(async (req, res) => {
             }
             //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank, style })
                     .then(async (user) => {
                         let reward;
                         if (totalPoints < 11) {
@@ -193,7 +193,7 @@ exports.updateTask = catchAsync(async (req, res) => {
     let { id, profit } = req.body;
     try {
         const user = await User.findOne({ tgId: tgId });
-
+        console.log("update Task-----", id)
         let tasks = user.task;
         if (!tasks.includes(id)) {
             user.task.push(id);
@@ -264,11 +264,10 @@ exports.getTopUsers = catchAsync(async (req, res) => {
 
     let numUsers = parseInt(req.query.num);
     try {
-        const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1 }).sort({ totalPoints: -1 }).limit(numUsers);
+        const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1, style: 1 }).sort({ totalPoints: -1 }).limit(numUsers);
         let curUser = await User.findOne({ tgId });
         let curUserIndex = await User.countDocuments({ totalPoints: { $gt: curUser.totalPoints } });
         // console.log("topUser", topUsers, "----------------", "curUser", curUser);
-
         return res.status(200).json({
             topUsers: topUsers,
             curUser: curUser,
