@@ -70,7 +70,7 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank, style, countDown: 0 })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, countDown, totalPoints, joinRank, style, countDown: 0 })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
                                 console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue, systemcountDown)
@@ -85,7 +85,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                                 {
                                                     text: 'Claim Now',
                                                     web_app: {
-                                                        url: "https://dog82027.vercel.app"
+                                                        url: "https://buffydrop.xyz"
                                                     }
                                                 }
                                             ]

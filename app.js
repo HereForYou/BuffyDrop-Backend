@@ -95,7 +95,7 @@ TGbot.on('callback_query', (callbackQuery) => {
 });
 // TGbot.launch();
 TGbot.on("polling_error", (error) => {
-    console.log("Polling error:", error);
+    console.log("Polling error:");
 });
 
 const desText = BOT_DESCRIPTION;
