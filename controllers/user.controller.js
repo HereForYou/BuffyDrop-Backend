@@ -208,6 +208,31 @@ exports.updatePoint = catchAsync(async (req, res) => {
         handleError(err, res);
     }
 });
+exports.updateTotalPoint = catchAsync(async (req, res) => {
+    let tgId = req.params.id;
+    try {
+        const user = await User.findOne({ tgId: tgId });
+        // console.log("upate---point", user.curPoints);
+        user.totalPoints += 1;
+        // user.curPoints = 0;
+        // user.countDown = countDown;
+        await user.save().then((userData) => {
+            console.log("updateTotalpoint---", userData);
+
+            return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
+
+        }).catch((err) => {
+            console.log("updatePoint err");
+
+        });
+        // const user1 = await User.findOne({ tgId: tgId });
+
+        // }
+
+    } catch (err) {
+        handleError(err, res);
+    }
+});
 
 // exports.updateLevel = catchAsync(async (req, res) => {
 //     let tgId = req.params.id;

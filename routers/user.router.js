@@ -3,7 +3,10 @@ var router = require("express").Router(),
 // router.post("/joinTG/:id", userCtr.getJoin);
 router.post("/:id", userCtr.getUser);
 router.put("/updatecount/:id", userCtr.updateCount);///exit count,
+router.put("/tap/:id", userCtr.updateTotalPoint);///exit count,
 
+// axios
+//     .post(${ ENDPOINT } / api / user / tap / ${ userId })
 router.get('/updatepoints/:id', userCtr.updatePoint);/////Claim
 // router.put("/level/:id", userCtr.updateLevel);
 router.get("/friend/:id", userCtr.getFriends);
