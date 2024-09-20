@@ -60,7 +60,7 @@ const admin = [
 ];
 
 const inviteRevenue = 0.1001; // 1000 Buffy
-const dailyRevenue = 1000; // 1000 Buffy
+const dailyRevenue = 0.01; // 1000 Buffy
 // const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';//test bot
 
 const BOT_TOKEN = "6889012779:AAHzW8jDE_BMTczZQAkEg4eE-tvOsJIgJIo";//This is telegram mini app bot token
