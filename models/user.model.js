@@ -26,6 +26,10 @@ var UserSchema = new Schema(
             type: Number,
             default: 0.000,
         },
+        countDown: {
+            type: Number,
+            default: 0,
+        },
         lastLogin: {
             type: Date,
             default: Date.now(),

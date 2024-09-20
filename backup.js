@@ -33,6 +33,10 @@ var UserSchema = new Schema(
             type: Number,
             default: 0.000,
         },
+        countDown: {
+            type: Number,
+            default: 0,
+        },
         lastLogin: {
             type: Date,
             default: Date.now(),
@@ -94,6 +98,7 @@ async function insertUsers(data) {
             lastName: userData.lastName || '', // Use an empty string if lastName is null or undefined
             totalPoints: userData.totalPoints,
             curPoints: userData.curPoints,
+            countDown: userData.countDown,
             lastLogin: userData.lastLogin,
             inviteLink: userData.inviteLink,
             isInvited: userData.isInvited,

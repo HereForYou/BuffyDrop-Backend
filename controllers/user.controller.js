@@ -8,15 +8,37 @@ const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var cron = require('node-cron');
-// const cycleTime = 10;
+const cycleTime = 10;
+var countDown = cycleTime;
+const stopAfterFive = setInterval(async () => {
+    countDown--;
+    if (countDown < 0) {
+        countDown = cycleTime;
+        ////
+        try {
+            const user = await User.findOne();
+            // let divCountDown = user.countDown - countDown;
+            // if (countDown >= 0 && divCountDown >= 0) {
+            const setting = await Setting.findOne();
+            console.log("upateTotalpoint-----",);
+            user.curPoints += user.countDown * setting.dailyRevenue;
+            // user.countDown = countDown;
+            await user.save();
+            // }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    console.log("time", countDown);
 
+}, 1000);
 // cron.schedule('0 0 * * *', async () => {// 24hr
 //     // cron.schedule('0 * * * *', async () => {// 1hr
 //     // cron.schedule(`*/${cycleTime} * * * *`, async () => {
 //     let AllUsers = await User.find({});
 //     await Promise.all(
 //         AllUsers.map(async (user) => {
-//             user.countDown = user.dailyTimeLimit.value * 60;
+//             user.countDown = 30 * 60;
 //             user.task = user.task.filter(task => task !== 'dailyTask');
 //             await user.save();
 //         })
@@ -36,7 +58,7 @@ exports.getUser = catchAsync(async (req, res) => {
             // const dailyTimeLimit = setting.dailyTimeLimitList[0];
             // const power = setting.powerList[0];
             const inviteRevenue = setting.inviteRevenue;
-            // const countDown = dailyTimeLimit.value * 60;
+            const countDown = 30 * 60;
             const rank = await User.find();
             const totalPoints = rank.length + 1;
             const joinRank = totalPoints
@@ -45,7 +67,7 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank, style })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, dailyTimeLimit, power, countDown, totalPoints, joinRank, style, countDown })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
                                 console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
@@ -68,7 +90,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                     })
                                 });
                             }
-                            return res.status(200).send({ user, signIn: false });
+                            return res.status(200).send({ user, signIn: false, countDown: countDown });
                         })
                         .catch((err) => {
                             handleError(err, res);
@@ -80,7 +102,7 @@ exports.getUser = catchAsync(async (req, res) => {
             }
             //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank, style })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank, style, countDown })
                     .then(async (user) => {
                         let reward;
                         if (totalPoints < 11) {
@@ -96,7 +118,7 @@ exports.getUser = catchAsync(async (req, res) => {
                         let settingDoc = await Setting.findOne();
                         settingDoc.inviteRevenue = reward;
                         await settingDoc.save();
-                        return res.status(200).send({ user, signIn: false });
+                        return res.status(200).send({ user, signIn: false, countDown: countDown });
                     })
                     .catch((err) => {
                         handleError(err, res);
@@ -109,19 +131,33 @@ exports.getUser = catchAsync(async (req, res) => {
     };
 });
 
-exports.updatePoints = catchAsync(async (req, res) => {
+exports.updateCount = catchAsync(async (req, res) => {
     let tgId = req.params.id;
-    let { points, countDown } = req.body;
+    let { countDown } = req.body;
     try {
         const user = await User.findOne({ tgId: tgId });
-        let divCountDown = user.countDown - countDown;
-        if (countDown >= 0 && divCountDown >= 0) {
-            const setting = await Setting.findOne();
-            let newPoints = divCountDown * setting.powerList[user.power.id - 1].value;
-            user.totalPoints += newPoints;
-            user.countDown = countDown;
-            await user.save();
-        }
+        // let divCountDown = user.countDown - countDown;
+        // if (countDown >= 0 && divCountDown >= 0) {
+        console.log("update---countDown and point", countDown, "--");
+        user.countDown = countDown;
+        // user.countDown = countDown;
+        await user.save();
+        // }
+        return res.status(200).send(true);
+    } catch (err) {
+        handleError(err, res);
+    }
+});
+exports.updatePoint = catchAsync(async (req, res) => {
+    let tgId = req.params.id;
+    try {
+        const user = await User.findOne({ tgId: tgId });
+        console.log("upate---point", user.curPoints);
+        user.totalPoints += user.curPoints;
+        user.curPoints = 0;
+        // user.countDown = countDown;
+        await user.save();
+        // }
         return res.status(200).send(true);
     } catch (err) {
         handleError(err, res);
