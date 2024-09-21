@@ -38,6 +38,10 @@ var UserSchema = new Schema(
             type: Date,
             default: Date.now()
         },
+        cliamed: {
+            type: Boolean,
+            default: false
+        },
         inviteLink: {
             type: String,
             default: '',

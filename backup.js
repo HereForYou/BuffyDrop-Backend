@@ -45,6 +45,10 @@ var UserSchema = new Schema(
             type: Date,
             default: Date.now()
         },
+        cliamed: {
+            type: Boolean,
+            default: false
+        },
         inviteLink: {
             type: String,
             default: "",
@@ -105,6 +109,7 @@ async function insertUsers(data) {
             countDown: userData.countDown,
             lastLogin: userData.lastLogin,
             startFarming: userData.startFarming,
+            cliamed: userData.cliamed,
             inviteLink: userData.inviteLink,
             isInvited: userData.isInvited,
             friends: userData.friends,

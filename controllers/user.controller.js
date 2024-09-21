@@ -202,6 +202,7 @@ exports.updatePoint = catchAsync(async (req, res) => {
         // user.curPoints = 0;
         // user.countDown = countDown;
         user.totalPoints += setting.dailyRevenue * cycleTime;
+        user.cliamed = true;
         await user.save().then((userData) => {
             console.log("updatepoint---", userData);
 
@@ -251,6 +252,7 @@ exports.startFarming = catchAsync(async (req, res) => {
     try {
         const user = await User.findOne({ tgId: tgId });
         user.startFarming = Date.now();
+        user.cliamed = false;
         await user.save().then(() => {
             console.log("OK");
         }).catch((err) => {
