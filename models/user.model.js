@@ -34,6 +34,10 @@ var UserSchema = new Schema(
             type: Date,
             default: Date.now(),
         },
+        startFarming: {
+            type: Date,
+            default: Date.now()
+        },
         inviteLink: {
             type: String,
             default: '',

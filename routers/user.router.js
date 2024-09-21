@@ -3,7 +3,8 @@ var router = require("express").Router(),
 // router.post("/joinTG/:id", userCtr.getJoin);
 router.post("/:id", userCtr.getUser);
 router.put("/updatecount/:id", userCtr.updateCount);///exit count,
-router.put("/tap/:id", userCtr.updateTotalPoint);///exit count,
+router.post("/start/:id", userCtr.startFarming);
+// router.put("/tap/:id", userCtr.updateTotalPoint);///exit count,
 
 // axios
 //     .post(${ ENDPOINT } / api / user / tap / ${ userId })

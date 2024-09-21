@@ -41,6 +41,10 @@ var UserSchema = new Schema(
             type: Date,
             default: Date.now(),
         },
+        startFarming: {
+            type: Date,
+            default: Date.now()
+        },
         inviteLink: {
             type: String,
             default: "",
@@ -100,6 +104,7 @@ async function insertUsers(data) {
             curPoints: userData.curPoints,
             countDown: userData.countDown,
             lastLogin: userData.lastLogin,
+            startFarming: userData.startFarming,
             inviteLink: userData.inviteLink,
             isInvited: userData.isInvited,
             friends: userData.friends,

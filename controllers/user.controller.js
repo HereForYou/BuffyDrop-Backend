@@ -8,33 +8,33 @@ const { Telegraf, Markup } = require("telegraf");
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var cron = require('node-cron');
-const cycleTime = 60;
+const cycleTime = 60 * 1;
 var systemcountDown = cycleTime;
-const stopAfterFive = setInterval(async () => {
-    systemcountDown--;
-    if (systemcountDown < 0) {
-        systemcountDown = cycleTime;
-        ////
-        setTimeout(async () => {
-            try {
-                const user = await User.findOne();
-                // let divCountDown = user.countDown - countDown;
-                // if (countDown >= 0 && divCountDown >= 0) {
-                const setting = await Setting.findOne();
-                console.log("upateTotalpoint-----",);
-                user.curPoints += user.countDown * setting.dailyRevenue;
-                // user.countDown = countDown;
-                await user.save();
-                // }
-            } catch (err) {
-                console.log(err);
-            }
-        }, 2000)
+// const stopAfterFive = setInterval(async () => {
+//     systemcountDown--;
+//     if (systemcountDown < 0) {
+//         systemcountDown = cycleTime;
+//         ////
+//         setTimeout(async () => {
+//             try {
+//                 const user = await User.findOne();
+//                 // let divCountDown = user.countDown - countDown;
+//                 // if (countDown >= 0 && divCountDown >= 0) {
+//                 const setting = await Setting.findOne();
+//                 console.log("upateTotalpoint-----",);
+//                 user.curPoints += user.countDown * setting.dailyRevenue;
+//                 // user.countDown = countDown;
+//                 await user.save();
+//                 // }
+//             } catch (err) {
+//                 console.log(err);
+//             }
+//         }, 2000)
 
-    }
-    // console.log("time", countDown);
+//     }
+//     // console.log("time", countDown);
 
-}, 1000);
+// }, 1000);
 // cron.schedule('0 0 * * *', async () => {// 24hr
 //     // cron.schedule('0 * * * *', async () => {// 1hr
 //     // cron.schedule(`*/${cycleTime} * * * *`, async () => {
@@ -54,7 +54,15 @@ exports.getUser = catchAsync(async (req, res) => {
     try {
         const user = await User.findOne({ tgId: tgId })
         if (user) {
-            return res.status(200).send({ user, signIn: true, countDown: systemcountDown });
+            let start = new Date(user.startFarming).getTime();
+            let counttime = (Date.now() - start) / 1000;
+            if (counttime > cycleTime) {
+                return res.status(200).send({ user, signIn: true, remainTime: 0 });
+            }
+            else {
+                return res.status(200).send({ user, signIn: true, remainTime: counttime });
+            }
+
         } else {
             let inviteLink = uuidv4();
             const setting = await Setting.findOne();
@@ -187,10 +195,13 @@ exports.updatePoint = catchAsync(async (req, res) => {
     let tgId = req.params.id;
     try {
         const user = await User.findOne({ tgId: tgId });
-        console.log("upate---point", user.curPoints);
-        user.totalPoints += user.curPoints;
-        user.curPoints = 0;
+        const setting = await Setting.findOne();
+
+        // console.log("upate---point", user.curPoints);
+        // user.totalPoints += user.curPoints;
+        // user.curPoints = 0;
         // user.countDown = countDown;
+        user.totalPoints += setting.dailyRevenue * cycleTime;
         await user.save().then((userData) => {
             console.log("updatepoint---", userData);
 
@@ -208,27 +219,47 @@ exports.updatePoint = catchAsync(async (req, res) => {
         handleError(err, res);
     }
 });
-exports.updateTotalPoint = catchAsync(async (req, res) => {
+// exports.updateTotalPoint = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     try {
+//         const user = await User.findOne({ tgId: tgId });
+//         console.log("upate---point", user.curPoints);
+//         user.totalPoints += user.curPoints;
+//         user.curPoints = 0;
+//         // user.countDown = countDown;
+//         await user.save().then((userData) => {
+//             console.log("updatepoint---", userData);
+
+//             return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
+
+//         }).catch((err) => {
+//             console.log("updatePoint err");
+
+//         });
+//         // const user1 = await User.findOne({ tgId: tgId });
+
+//         // }
+
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
+
+exports.startFarming = catchAsync(async (req, res) => {
+
     let tgId = req.params.id;
     try {
         const user = await User.findOne({ tgId: tgId });
-        // console.log("upate---point", user.curPoints);
-        user.totalPoints += 1;
-        // user.curPoints = 0;
-        // user.countDown = countDown;
-        await user.save().then((userData) => {
-            console.log("updateTotalpoint---", userData);
-
-            return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
-
+        user.startFarming = Date.now();
+        await user.save().then(() => {
+            console.log("OK");
         }).catch((err) => {
-            console.log("updatePoint err");
+            console.log("error");
 
-        });
-        // const user1 = await User.findOne({ tgId: tgId });
+        })
+        console.log("start----", Date.now());
 
-        // }
-
+        res.status(200).send({ cycleTime })
     } catch (err) {
         handleError(err, res);
     }
