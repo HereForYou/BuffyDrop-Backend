@@ -47,7 +47,7 @@ var UserSchema = new Schema(
         },
         cliamed: {
             type: Boolean,
-            default: false
+            default: true
         },
         inviteLink: {
             type: String,

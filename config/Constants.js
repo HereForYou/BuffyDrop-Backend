@@ -63,9 +63,9 @@ const inviteRevenue = 0.1001; // 1000 Buffy
 const dailyRevenue = 0.01; // 1000 Buffy
 // const BOT_TOKEN = '7233907096:AAFXzUYCRmFFN9jJmnNE-gL56awzOh9heCs';//test bot
 
-const BOT_TOKEN = "6889012779:AAHzW8jDE_BMTczZQAkEg4eE-tvOsJIgJIo";//This is telegram mini app bot token
+const BOT_TOKEN = "6889012779:AAExrQkNHd9TXm8dA9X0PZ5N8sZ-7N2dygw";//This is telegram mini app bot token
 // const TELEGRAM_TOKEN = "7509197025:AAHDRQQu8qVeZfhix79fbelhat45Wxn8wD0"//This is test telegram channel admin bot token.
-const TELEGRAM_TOKEN = "7227899625:AAF7WDFl4-_j01dIw5fivATi7jGWD-Ai3FM"//This is telegram channel admin bot token.
+const TELEGRAM_TOKEN = "7227899625:AAGOmLIbIX4vtC7sWFnth4TWcj46s-QskAY"//This is telegram channel admin bot token.
 
 // const GROUP_USERNAME = '@BuffyDrop44'///test
 const GROUP_USERNAME = '@BuffyDrop'

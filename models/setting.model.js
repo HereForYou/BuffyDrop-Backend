@@ -43,7 +43,7 @@ var SettingSchema = new Schema(
         },
         dailyRevenue: {
             type: Number,
-            default: 1000 // Min
+            default: 1 // Min
         }
     },
     {

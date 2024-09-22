@@ -5,10 +5,13 @@ var mongoose = require("mongoose"),
 const handleError = require("../config/utils/handleError");
 const catchAsync = require("../config/utils/catchAsync");
 const { Telegraf, Markup } = require("telegraf");
+var { BOT_TOKEN } = require("../config/Constants");
+const bot = new Telegraf(BOT_TOKEN);
+
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var cron = require('node-cron');
-const cycleTime = 60 * 1;
+const cycleTime = 8 //* 60 * 60;//Hour * 60 * 60===>seconds
 var systemcountDown = cycleTime;
 // const stopAfterFive = setInterval(async () => {
 //     systemcountDown--;
@@ -57,10 +60,10 @@ exports.getUser = catchAsync(async (req, res) => {
             let start = new Date(user.startFarming).getTime();
             let counttime = (Date.now() - start) / 1000;
             if (counttime > cycleTime) {
-                return res.status(200).send({ user, signIn: true, remainTime: 0 });
+                return res.status(200).send({ user, signIn: true, remainTime: 0, cycleTime: cycleTime });
             }
             else {
-                return res.status(200).send({ user, signIn: true, remainTime: counttime });
+                return res.status(200).send({ user, signIn: true, remainTime: counttime, cycleTime: cycleTime });
             }
 
         } else {
@@ -78,7 +81,7 @@ exports.getUser = catchAsync(async (req, res) => {
             {
                 const owner = await User.findOne({ inviteLink: start_param });
                 if (owner) {
-                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, countDown, totalPoints, joinRank, style, countDown: 0 })
+                    User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, totalPoints, joinRank, style })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
                                 console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue, systemcountDown)
@@ -101,7 +104,7 @@ exports.getUser = catchAsync(async (req, res) => {
                                     })
                                 });
                             }
-                            return res.status(200).send({ user, signIn: false, countDown: systemcountDown });
+                            return res.status(200).send({ user, signIn: false, remainTime: 0, cycleTime: cycleTime });
                         })
                         .catch((err) => {
                             handleError(err, res);
@@ -113,7 +116,7 @@ exports.getUser = catchAsync(async (req, res) => {
             }
             //new user
             else {
-                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank, style, countDown: 0 })
+                User.create({ tgId, userName, firstName, lastName, inviteLink, totalPoints, joinRank, style })
                     .then(async (user) => {
                         let reward;
                         if (totalPoints < 11) {
@@ -129,7 +132,7 @@ exports.getUser = catchAsync(async (req, res) => {
                         let settingDoc = await Setting.findOne();
                         settingDoc.inviteRevenue = reward;
                         await settingDoc.save();
-                        return res.status(200).send({ user, signIn: false, countDown: systemcountDown });
+                        return res.status(200).send({ user, signIn: false, remainTime: 0, cycleTime: cycleTime });
                     })
                     .catch((err) => {
                         handleError(err, res);
@@ -157,7 +160,7 @@ exports.updateCount = catchAsync(async (req, res) => {
 
             // user.countDown = countDown;
             await user.save().then((userData => {
-                return res.status(200).send({ status: true, user: userData, countDown: cycleTime });
+                return res.status(200).send({ status: true, user: userData, cycleTime: cycleTime });
 
             })).catch((err) => {
                 console.log("updateCount err");
@@ -178,7 +181,7 @@ exports.updateCount = catchAsync(async (req, res) => {
             user.countDown += countDown;
             // user.countDown = countDown;
             await user.save().then((userData => {
-                return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
+                return res.status(200).send({ status: true, user: userData, cycleTime: systemcountDown });
 
             })).catch((err) => {
                 console.log("updateCount err");
@@ -202,11 +205,12 @@ exports.updatePoint = catchAsync(async (req, res) => {
         // user.curPoints = 0;
         // user.countDown = countDown;
         user.totalPoints += setting.dailyRevenue * cycleTime;
+        console.log("farm upate--------", setting.dailyRevenue * cycleTime)
         user.cliamed = true;
         await user.save().then((userData) => {
-            console.log("updatepoint---", userData);
+            // console.log("updatepoint---", userData);
 
-            return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
+            return res.status(200).send({ status: true, user: userData, remainTime: cycleTime });
 
         }).catch((err) => {
             console.log("updatePoint err");
@@ -220,31 +224,31 @@ exports.updatePoint = catchAsync(async (req, res) => {
         handleError(err, res);
     }
 });
-// exports.updateTotalPoint = catchAsync(async (req, res) => {
-//     let tgId = req.params.id;
-//     try {
-//         const user = await User.findOne({ tgId: tgId });
-//         console.log("upate---point", user.curPoints);
-//         user.totalPoints += user.curPoints;
-//         user.curPoints = 0;
-//         // user.countDown = countDown;
-//         await user.save().then((userData) => {
-//             console.log("updatepoint---", userData);
+exports.updateTotalPoint = catchAsync(async (req, res) => {
+    let tgId = req.params.id;
+    try {
+        const user = await User.findOne({ tgId: tgId });
+        // console.log("upate---point", user.curPoints);
+        user.totalPoints += 1;
+        // user.curPoints = 0;
+        // user.countDown = countDown;
+        await user.save().then((userData) => {
+            console.log("updatepoint---", userData);
 
-//             return res.status(200).send({ status: true, user: userData, countDown: systemcountDown });
+            return res.status(200).send({ status: true, user: userData });
 
-//         }).catch((err) => {
-//             console.log("updatePoint err");
+        }).catch((err) => {
+            console.log("updatePoint err");
 
-//         });
-//         // const user1 = await User.findOne({ tgId: tgId });
+        });
+        // const user1 = await User.findOne({ tgId: tgId });
 
-//         // }
+        // }
 
-//     } catch (err) {
-//         handleError(err, res);
-//     }
-// });
+    } catch (err) {
+        handleError(err, res);
+    }
+});
 
 exports.startFarming = catchAsync(async (req, res) => {
 
