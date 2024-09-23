@@ -49,6 +49,10 @@ var UserSchema = new Schema(
             type: Boolean,
             default: true
         },
+        isStarted: {
+            type: Boolean,
+            default: false
+        },
         inviteLink: {
             type: String,
             default: "",

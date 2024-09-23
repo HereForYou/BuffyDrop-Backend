@@ -11,8 +11,8 @@ const bot = new Telegraf(BOT_TOKEN);
 const { v4: uuidv4 } = require('uuid');
 // const { getIo } = require("../config/socket");
 var cron = require('node-cron');
-const cycleTime = 8 //* 60 * 60;//Hour * 60 * 60===>seconds
-var systemcountDown = cycleTime;
+const cycleTime = 8 //* 60// * 60;//Hour * 60 * 60===>seconds
+// var systemcountDown = cycleTime;
 // const stopAfterFive = setInterval(async () => {
 //     systemcountDown--;
 //     if (systemcountDown < 0) {
@@ -60,7 +60,14 @@ exports.getUser = catchAsync(async (req, res) => {
             let start = new Date(user.startFarming).getTime();
             let counttime = (Date.now() - start) / 1000;
             if (counttime > cycleTime) {
-                return res.status(200).send({ user, signIn: true, remainTime: 0, cycleTime: cycleTime });
+                user.cliamed = false;
+                // user.isStarted = false;
+                await user.save().then((userData) => {
+                    return res.status(200).send({ user: userData, signIn: true, remainTime: 0, cycleTime: cycleTime });
+                }).catch((err) => {
+                    console.log("Database Error");
+
+                })
             }
             else {
                 return res.status(200).send({ user, signIn: true, remainTime: counttime, cycleTime: cycleTime });
@@ -145,55 +152,55 @@ exports.getUser = catchAsync(async (req, res) => {
     };
 });
 
-exports.updateCount = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { countDown, cycle } = req.body;
-    if (cycle) {
-        try {
-            const setting = await Setting.findOne();
-            const user = await User.findOne({ tgId: tgId });
-            // let divCountDown = user.countDown - countDown;
-            // if (countDown >= 0 && divCountDown >= 0) {
-            console.log("update---Point", countDown, "--");
-            user.curPoints += countDown * setting.dailyRevenue;
-            user.countDown = 0;
+// exports.updateCount = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { countDown, cycle } = req.body;
+//     if (cycle) {
+//         try {
+//             const setting = await Setting.findOne();
+//             const user = await User.findOne({ tgId: tgId });
+//             // let divCountDown = user.countDown - countDown;
+//             // if (countDown >= 0 && divCountDown >= 0) {
+//             console.log("update---Point", countDown, "--");
+//             user.curPoints += countDown * setting.dailyRevenue;
+//             user.countDown = 0;
 
-            // user.countDown = countDown;
-            await user.save().then((userData => {
-                return res.status(200).send({ status: true, user: userData, cycleTime: cycleTime });
+//             // user.countDown = countDown;
+//             await user.save().then((userData => {
+//                 return res.status(200).send({ status: true, user: userData, cycleTime: cycleTime });
 
-            })).catch((err) => {
-                console.log("updateCount err");
+//             })).catch((err) => {
+//                 console.log("updateCount err");
 
-            });
-            // }
-        } catch (err) {
-            handleError(err, res);
-        }
+//             });
+//             // }
+//         } catch (err) {
+//             handleError(err, res);
+//         }
 
-    }
-    else {
-        try {
-            const user = await User.findOne({ tgId: tgId });
-            // let divCountDown = user.countDown - countDown;
-            // if (countDown >= 0 && divCountDown >= 0) {
-            console.log("update---countDown and point", countDown, "--");
-            user.countDown += countDown;
-            // user.countDown = countDown;
-            await user.save().then((userData => {
-                return res.status(200).send({ status: true, user: userData, cycleTime: systemcountDown });
+//     }
+//     else {
+//         try {
+//             const user = await User.findOne({ tgId: tgId });
+//             // let divCountDown = user.countDown - countDown;
+//             // if (countDown >= 0 && divCountDown >= 0) {
+//             console.log("update---countDown and point", countDown, "--");
+//             user.countDown += countDown;
+//             // user.countDown = countDown;
+//             await user.save().then((userData => {
+//                 return res.status(200).send({ status: true, user: userData, cycleTime: systemcountDown });
 
-            })).catch((err) => {
-                console.log("updateCount err");
+//             })).catch((err) => {
+//                 console.log("updateCount err");
 
-            });
-            // }
-        } catch (err) {
-            handleError(err, res);
-        }
-    }
+//             });
+//             // }
+//         } catch (err) {
+//             handleError(err, res);
+//         }
+//     }
 
-});
+// });
 exports.updatePoint = catchAsync(async (req, res) => {
     let tgId = req.params.id;
     try {
@@ -207,6 +214,7 @@ exports.updatePoint = catchAsync(async (req, res) => {
         user.totalPoints += setting.dailyRevenue * cycleTime;
         console.log("farm upate--------", setting.dailyRevenue * cycleTime)
         user.cliamed = true;
+        user.isStarted = false;
         await user.save().then((userData) => {
             // console.log("updatepoint---", userData);
 
@@ -256,7 +264,8 @@ exports.startFarming = catchAsync(async (req, res) => {
     try {
         const user = await User.findOne({ tgId: tgId });
         user.startFarming = Date.now();
-        user.cliamed = false;
+        user.cliamed = true;
+        user.isStarted = true;
         await user.save().then(() => {
             console.log("OK");
         }).catch((err) => {
@@ -265,7 +274,29 @@ exports.startFarming = catchAsync(async (req, res) => {
         })
         console.log("start----", Date.now());
 
-        res.status(200).send({ cycleTime })
+        res.status(200).send({ cycleTime, user: user })
+    } catch (err) {
+        handleError(err, res);
+    }
+});
+
+exports.endFarming = catchAsync(async (req, res) => {
+
+    let tgId = req.params.id;
+    try {
+        const user = await User.findOne({ tgId: tgId });
+        // user.startFarming = Date.now();
+        user.cliamed = false;
+        // user.isStarted = true;
+        await user.save().then(() => {
+            console.log("OK");
+        }).catch((err) => {
+            console.log("error");
+
+        })
+        console.log("start----", Date.now());
+
+        res.status(200).send({ user: user, cycleTime })
     } catch (err) {
         handleError(err, res);
     }
@@ -407,7 +438,7 @@ exports.getTopUsers = catchAsync(async (req, res) => {
 
     let numUsers = parseInt(req.query.num);
     try {
-        const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1, style: 1 }).sort({ totalPoints: -1 }).limit(numUsers);
+        const topUsers = await User.find({}, { totalPoints: 1, userName: 1, tgId: 1, style: 1 }).sort({ totalPoints: -1 });
         let curUser = await User.findOne({ tgId });
         let curUserIndex = await User.countDocuments({ totalPoints: { $gt: curUser.totalPoints } });
         // console.log("topUser", topUsers, "----------------", "curUser", curUser);
@@ -422,67 +453,67 @@ exports.getTopUsers = catchAsync(async (req, res) => {
     };
 });
 
-exports.getAll = catchAsync(async (req, res) => {
-    try {
-        const allUsers = await User.find({});
+// exports.getAll = catchAsync(async (req, res) => {
+//     try {
+//         const allUsers = await User.find({});
 
-        return res.status(200).json({
-            allUsers
-        });
-    }
-    catch (err) {
-        handleError(err, res);
-    };
-});
+//         return res.status(200).json({
+//             allUsers
+//         });
+//     }
+//     catch (err) {
+//         handleError(err, res);
+//     };
+// });
 
-exports.getAllCount = catchAsync(async (req, res) => {
-    try {
-        const totalCount = await User.countDocuments({});
-        return res.status(200).json({
-            totalCount
-        });
-    }
-    catch (err) {
-        handleError(err, res);
-    };
-});
+// exports.getAllCount = catchAsync(async (req, res) => {
+//     try {
+//         const totalCount = await User.countDocuments({});
+//         return res.status(200).json({
+//             totalCount
+//         });
+//     }
+//     catch (err) {
+//         handleError(err, res);
+//     };
+// });
 
-exports.updateUser = catchAsync(async (req, res) => {
-    let tgId = req.params.id;
-    let { points, countDown, power, dailyTimeLimit, level } = req.body;
-    try {
-        const user = await User.findOne({ tgId: tgId });
-        user.totalPoints = points;
-        user.countDown = countDown;
-        user.power = power;
-        user.dailyTimeLimit = dailyTimeLimit;
-        user.level = level;
-        await user.save();
-        return res.status(200).send(true);
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+// exports.updateUser = catchAsync(async (req, res) => {
+//     let tgId = req.params.id;
+//     let { points, countDown, power, dailyTimeLimit, level } = req.body;
+//     try {
+//         const user = await User.findOne({ tgId: tgId });
+//         user.totalPoints = points;
+//         user.countDown = countDown;
+//         user.power = power;
+//         user.dailyTimeLimit = dailyTimeLimit;
+//         user.level = level;
+//         await user.save();
+//         return res.status(200).send(true);
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
-exports.getTotalPoints = catchAsync(async (req, res) => {
-    try {
-        const result = await User.aggregate([
-            {
-                $group: {
-                    _id: null,
-                    totalPointsSum: { $sum: "$totalPoints" }
-                }
-            }
-        ]);
+// exports.getTotalPoints = catchAsync(async (req, res) => {
+//     try {
+//         const result = await User.aggregate([
+//             {
+//                 $group: {
+//                     _id: null,
+//                     totalPointsSum: { $sum: "$totalPoints" }
+//                 }
+//             }
+//         ]);
 
-        // Check if the result array is not empty and extract the sum
-        const totalPointsSum = result.length > 0 ? result[0].totalPointsSum : 0;
-        return res.status(200).send({ totalPointsSum: totalPointsSum });
+//         // Check if the result array is not empty and extract the sum
+//         const totalPointsSum = result.length > 0 ? result[0].totalPointsSum : 0;
+//         return res.status(200).send({ totalPointsSum: totalPointsSum });
 
-    } catch (err) {
-        handleError(err, res);
-    }
-});
+//     } catch (err) {
+//         handleError(err, res);
+//     }
+// });
 
 // exports.updateCountDown = catchAsync(async (req, res) => {
 //     let tgId = req.params.id;

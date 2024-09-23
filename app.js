@@ -23,20 +23,25 @@ const crypto_js_1 = __importDefault(require('crypto-js'))
 Object.defineProperty(exports, '__esModule', { value: true })
 const bot = new Telegraf(BOT_TOKEN);
 const TelegramBot = require('node-telegram-bot-api')
-const TGbot = new TelegramBot(TELEGRAM_TOKEN, { polling: true })
+// const TGbot = new TelegramBot(TELEGRAM_TOKEN, { polling: true })
+const TGbot = new TelegramBot(TELEGRAM_TOKEN, { webHook: { port: 5000 } })
+
+// Set the webhook
+const url = `https://filly-quiet-officially.ngrok-free.app/${TELEGRAM_TOKEN}`
+TGbot.setWebHook(url)
 let groupId = 0
 let USER_ID = 0
 let USER_NAME = 'Leo_mint'
 let chatId = 0
-console.log("-------------------------------------------------------------------");
-console.log(TELEGRAM_TOKEN, GROUP_USERNAME)
-console.log("-------------------------------------------------------------------");
+// console.log("-------------------------------------------------------------------");
+// console.log(TELEGRAM_TOKEN, GROUP_USERNAME)
+// console.log("-------------------------------------------------------------------");
 TGbot
     .getChat(GROUP_USERNAME)
     // .getChat('@BuffyDrop44')
     .then(chat => {
         groupId = chat.id;
-        console.log("----------------------GroupID", groupId);
+        // console.log("----------------------GroupID", groupId);
 
     })
     .catch(error => {
@@ -112,7 +117,7 @@ mongoose().then(async () => {
         }
         next();
     });
-    // var server = http.createServer(app);
+    var server = http.createServer(app);
     // const io = init(server);
 
     // io.on('connection', (socket) => {
@@ -140,32 +145,32 @@ mongoose().then(async () => {
                 res.status(200).send({ status: false })
             })
     })
-    const options = {
-        key: fs.readFileSync("./cert/privkey.pem"),
-        cert: fs.readFileSync("./cert/fullchain.pem")
-    };
+    // const options = {
+    //     key: fs.readFileSync("./cert/privkey.pem"),
+    //     cert: fs.readFileSync("./cert/fullchain.pem")
+    // };
 
-    https.createServer(options, app).listen(443, "78.141.204.6", () => {
-        console.log(`Server running at https://78.141.204.6/`);
-        app.post('/api/user/joinTG/:id', (req, res) => {
-            let USER_TEL_ID = req.params.id;
-            console.log("user id---", USER_TEL_ID, "--goroup id----", groupId);
-            TGbot
-                .getChatMember(groupId, USER_TEL_ID)
-                .then(() => {
-                    console.log("this id exist in this channel")
-                    res.status(200).send({ status: true })
-                })
-                .catch(err => {
-                    console.log("this id don't exist in this channel")
-                    res.status(200).send({ status: false })
-                })
-        })
-    });
-
-    // server.listen(config.port, () => {
-    //     console.log(`Server is running at http://localhost:${config.port}`)
+    // https.createServer(options, app).listen(443, "78.141.204.6", () => {
+    //     console.log(`Server running at https://78.141.204.6/`);
+    //     app.post('/api/user/joinTG/:id', (req, res) => {
+    //         let USER_TEL_ID = req.params.id;
+    //         console.log("user id---", USER_TEL_ID, "--goroup id----", groupId);
+    //         TGbot
+    //             .getChatMember(groupId, USER_TEL_ID)
+    //             .then(() => {
+    //                 console.log("this id exist in this channel")
+    //                 res.status(200).send({ status: true })
+    //             })
+    //             .catch(err => {
+    //                 console.log("this id don't exist in this channel")
+    //                 res.status(200).send({ status: false })
+    //             })
+    //     })
     // });
+
+    server.listen(config.port, () => {
+        console.log(`Server is running at http://localhost:${config.port}`)
+    });
 
 
 });
