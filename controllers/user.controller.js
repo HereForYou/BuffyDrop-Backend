@@ -91,7 +91,7 @@ exports.getUser = catchAsync(async (req, res) => {
                     User.create({ tgId, userName, firstName, lastName, isInvited: true, inviteLink, totalPoints, joinRank, style })
                         .then(async (user) => {
                             if (!owner.friends.includes(tgId)) {
-                                console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue, systemcountDown)
+                                console.log("invitied user totalPoints amount----------", user.totalPoints, "-------------reward", inviteRevenue)
                                 // owner.friends.push(tgId, inviteRevenue * user.totalPoints);
                                 owner.friends.push({ id: tgId, revenue: inviteRevenue * user.totalPoints });
                                 owner.totalPoints += inviteRevenue * user.totalPoints;
@@ -135,7 +135,7 @@ exports.getUser = catchAsync(async (req, res) => {
                         else if (totalPoints < 100001) { reward = 0.065; }
                         else if (totalPoints < 1000001) { reward = 0.0190; }
                         else { reward = totalPoints * 0.01; }
-                        console.log('invite reward amount-------------', reward, totalPoints, systemcountDown)
+                        console.log('invite reward amount-------------', reward, totalPoints)
                         let settingDoc = await Setting.findOne();
                         settingDoc.inviteRevenue = reward;
                         await settingDoc.save();
